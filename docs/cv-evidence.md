@@ -30,4 +30,4 @@ change at a time.*
 | Eval suite | [`evals/tasks/`](../evals/tasks/), [`evals.py`](../src/agent_harness/evals.py) | 10 tasks with failing tests (`test_every_task_fixture_starts_red`); [`results.md`](results.md) generated from `results/*/*/summary.json` |
 | One change at a time | [`configs/v1.yaml`](../configs/v1.yaml) … [`v6.yaml`](../configs/v6.yaml) | `test_each_version_changes_one_thing` fails if a version changes more than one knob |
 | Regression gate in CI | [`ci.yml`](../.github/workflows/ci.yml), [`evals/baseline.json`](../evals/baseline.json) | `test_gate_*` (same contract as invoice-mlops's `assert_min_f1`); the `eval gate (fake model)` job |
-| No framework | [`pyproject.toml`](../pyproject.toml) | Runtime dependency: `pyyaml` only; `anthropic` is an optional extra; Gemini over plain REST |
+| No framework | [`pyproject.toml`](../pyproject.toml) | Runtime dependency: `pyyaml` only; `anthropic` is an optional extra; Gemini and Ollama over plain REST |

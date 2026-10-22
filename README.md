@@ -41,10 +41,22 @@ python scripts/summarize_traces.py runs/v6/fake
 agent-harness report --readme README.md
 ```
 
-Real models are optional and cost money: `--model claude-haiku-5-5` (needs
-`pip install -e ".[anthropic]"` and `ANTHROPIC_API_KEY`) or `--model gemini-3.8-flash`
-(needs `GEMINI_API_KEY`). Keys are read from the environment only, and stripped from the
-environment of every test process the harness spawns.
+### Bring your own model
+
+Everything above runs with the built-in fake model. To try a real one, pick whichever you
+have; the same commands take a `--model` flag:
+
+| Option | Setup | Example |
+|---|---|---|
+| Claude (API key) | `pip install -e ".[anthropic]"` and export `ANTHROPIC_API_KEY` | `agent-harness eval --model claude-haiku-5-5 --repeats 3` |
+| Gemini (API key) | export `GEMINI_API_KEY` | `agent-harness eval --model gemini-3.8-flash --repeats 3` |
+| Local model (your GPU or CPU, free) | install [Ollama](https://ollama.com) and `ollama pull qwen3:8b` | `agent-harness eval --model ollama/qwen3:8b` |
+
+Keys are read from your environment only: nothing in this repository holds or asks for
+one, CI never uses one, and the harness strips them from every test process it spawns.
+Results land in `results/<version>/<model>/`, and `agent-harness report --readme README.md`
+adds them to the table below, labeled with the model that produced them. API runs cost
+money: each run has a `max_cost_usd` budget in the config (0.50 by default).
 
 ## What a harness is
 
@@ -98,7 +110,7 @@ Verification, observability and evals sit across them.
 | Subsystem | What it does here | Files |
 |---|---|---|
 | Agent loop | Linear `while`: step, cost and wall-time budgets, cap on replies without a tool call, stuck detection (same call 3× stops the run), verify-on-stop | [`loop.py`](src/agent_harness/loop.py) |
-| LLM integration | `Model` protocol (one action per call); fake rule-based model; Claude adapter (official SDK); Gemini adapter (REST); dated price table | [`models/`](src/agent_harness/models/) |
+| LLM integration | `Model` protocol (one action per call); fake rule-based model; Claude adapter (official SDK); Gemini and Ollama adapters (REST); dated price table | [`models/`](src/agent_harness/models/) |
 | Tools and actions | `search_code`, `read_file`, `edit_file` (exact unique match, closest-line hint), `run_tests`, `finish`; JSON Schema validation before execution; actionable errors | [`tools.py`](src/agent_harness/tools.py) |
 | Memory and context | State outside the model; context rebuilt every step, stable parts first; threshold compaction into a merged structured summary; root `AGENTS.md` | [`state.py`](src/agent_harness/state.py), [`context.py`](src/agent_harness/context.py) |
 | Safety and permissions | Allow/ask/deny rules as data, first match wins; undeclared tools are never shown; isolated workspace with a path guard; secrets stripped from subprocesses | [`permissions.py`](src/agent_harness/permissions.py), [`workspace.py`](src/agent_harness/workspace.py), [`configs/`](configs/) |
@@ -155,9 +167,9 @@ Per task:
   claims and that nothing regresses; it does not say how much any of it helps a real model.
   Three tasks are controls that pass on every version, and `stuck_search` is hopeless by
   design: stuck detection does not save it, it ends it after 3 steps instead of 15.
-- **Real-model rows** are added by running the same suite with `--model claude-…` or
-  `--model gemini-…` and `--repeats 3`; the table labels every row with the model that
-  produced it. None have been run yet: they cost money and need a key.
+- **Real-model rows** come from running the same suite with your own model (see "Bring
+  your own model"), ideally with `--repeats 3` to see the variance; the table labels every
+  row with the model that produced it. The repository ships fake-model results only.
 
 ### The gate
 
@@ -239,8 +251,9 @@ Parts). The tutorial's teaching code was the starting point; this is a rewrite a
 - **No subagents, MCP, ACP or skills.** Single agent by choice (Rec. 12). Exposing the tools
   over MCP is a possible extension.
 - **Only the root `AGENTS.md`**: no nested files loaded when a tool touches a subtree.
-- **The fake-model numbers are not evidence of usefulness** (see above), and the real-model
-  adapters are tested against recorded response shapes only: no live call has been made yet.
+- **The fake-model numbers are not evidence of usefulness** (see above). The Claude, Gemini
+  and Ollama adapters are tested against recorded response shapes and a stand-in HTTP
+  server, not against the live services; the repository includes no real-model results.
 - **Ten tasks is a small suite.** The tutorial suggests about twenty; real-model runs need
   repetitions to separate signal from noise.
 
@@ -253,6 +266,10 @@ IDs and prices verified on 2026-10-22 against the providers' documentation
 |---|---|---|
 | Anthropic | `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` | 4 / 20, 2 / 10, 0.10 / 0.50 |
 | Google | `gemini-3.8-flash`, `gemini-3.5-flash-lite`, `gemini-4-argon` | 0.75 / 3.75, 0.30 / 2.50, 2 / 10 |
+| Ollama (local) | `ollama/<name>`, any pulled model with tool calling, e.g. `ollama/qwen3:8b` | free; runs on your hardware |
+
+Any other Claude or Gemini ID works too once its price is added to `pricing.py` (the cost
+budget needs it).
 
 ## Layout
 
