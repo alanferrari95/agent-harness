@@ -1,0 +1,13 @@
+# The first edit pastes read_file's line-number prefixes into old_text.
+steps:
+  - tool: read_file
+    args: {path: dates/parse.py}
+  - tool: edit_file
+    with_line_numbers: true
+    args:
+      path: dates/parse.py
+      old_text: "    return date(int(year), int(day), int(month))"
+      new_text: "    return date(int(year), int(month), int(day))"
+  - tool: run_tests
+  - tool: finish
+    args: {summary: Fixed the argument order.}

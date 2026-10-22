@@ -1,0 +1,20 @@
+# Control task in two iterations: the first fix is incomplete and the tests say so.
+steps:
+  - tool: search_code
+    args: {query: def slugify}
+  - tool: read_file
+    args: {path: text/slug.py}
+  - tool: edit_file
+    args:
+      path: text/slug.py
+      old_text: '    slug = re.sub(r"[^a-z0-9]", "-", slug)'
+      new_text: '    slug = re.sub(r"[^a-z0-9]+", "-", slug)'
+  - tool: run_tests
+  - tool: edit_file
+    args:
+      path: text/slug.py
+      old_text: "    return slug\n"
+      new_text: "    return slug.strip(\"-\")\n"
+  - tool: run_tests
+  - tool: finish
+    args: {summary: Collapse separators and trim hyphens.}

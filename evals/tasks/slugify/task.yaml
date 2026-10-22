@@ -1,0 +1,5 @@
+id: slugify
+goal: >-
+  slugify(title) must return lowercase words joined by single hyphens, with no
+  leading or trailing hyphen: "Hello, World!" becomes "hello-world".
+tags: [bugfix, control, iterative]

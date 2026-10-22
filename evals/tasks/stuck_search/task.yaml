@@ -1,0 +1,4 @@
+id: stuck_search
+goal: >-
+  format_price(value) must always show two decimals: 3.5 becomes "$3.50".
+tags: [bugfix, stuck-detection, hopeless]

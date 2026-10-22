@@ -1,0 +1,5 @@
+id: ambiguous_discount
+goal: >-
+  discounted_total(price, quantity, discount) ignores the discount. Apply it:
+  discount is a fraction, so 0.25 means 25% off.
+tags: [bugfix, actionable-errors]

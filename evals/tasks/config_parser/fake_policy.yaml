@@ -1,0 +1,12 @@
+# Control task: no scripted flaw. Should pass on every version.
+steps:
+  - tool: read_file
+    args: {path: settings/parser.py}
+  - tool: edit_file
+    args:
+      path: settings/parser.py
+      old_text: "    for line in text.splitlines():\n        if not line or line.startswith(\"#\"):\n            continue\n        key, value = line.split(\"=\", 1)\n        result[key] = value"
+      new_text: "    for raw in text.splitlines():\n        line = raw.strip()\n        if not line or line.startswith(\"#\"):\n            continue\n        key, value = line.split(\"=\", 1)\n        result[key.strip()] = value.strip()"
+  - tool: run_tests
+  - tool: finish
+    args: {summary: Strip whitespace around keys, values and comments.}

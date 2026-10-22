@@ -1,0 +1,5 @@
+id: long_context
+goal: >-
+  The reorder report misses SKUs whose stock is exactly at the threshold. A SKU
+  must be reordered when stock has fallen to the threshold or below.
+tags: [bugfix, context-compaction]

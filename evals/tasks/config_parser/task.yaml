@@ -1,0 +1,5 @@
+id: config_parser
+goal: >-
+  parse_config should ignore surrounding whitespace in keys and values, and treat
+  indented "#" lines as comments.
+tags: [bugfix, control]

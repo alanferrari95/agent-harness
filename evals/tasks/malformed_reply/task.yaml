@@ -1,0 +1,4 @@
+id: malformed_reply
+goal: >-
+  greet(name) must return "Hello, <name>!" (with a comma and an exclamation mark).
+tags: [bugfix, control, robustness]

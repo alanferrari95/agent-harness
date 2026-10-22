@@ -1,0 +1,5 @@
+id: pagination_off_by_one
+goal: >-
+  page_slice(items, page, per_page) uses 1-based pages, but page 1 currently skips
+  the first items. Fix it so page 1 starts at the first item.
+tags: [bugfix, actionable-errors]

@@ -1,0 +1,6 @@
+# A model going in circles: it keeps searching for a symbol that does not exist.
+# No harness setting rescues this run; stuck detection only stops it early.
+steps:
+  - tool: search_code
+    args: {query: CurrencyFormatter}
+    repeat: 30

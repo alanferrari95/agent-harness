@@ -1,0 +1,17 @@
+# The first old_text appears twice in the file. Recoverable only if the error says so.
+steps:
+  - tool: search_code
+    args: {query: discounted_total}
+  - tool: read_file
+    args: {path: shop/pricing.py}
+  - tool: edit_file
+    args:
+      path: shop/pricing.py
+      old_text: "    total = price * quantity\n    return round(total, 2)"
+      new_text: "    total = price * quantity * (1 - discount)\n    return round(total, 2)"
+    on_ambiguous:
+      old_text: "    \"\"\"Total after a fractional discount, e.g. 0.25 for 25% off.\"\"\"\n    total = price * quantity\n"
+      new_text: "    \"\"\"Total after a fractional discount, e.g. 0.25 for 25% off.\"\"\"\n    total = price * quantity * (1 - discount)\n"
+  - tool: run_tests
+  - tool: finish
+    args: {summary: Applied the discount.}

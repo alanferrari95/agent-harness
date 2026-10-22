@@ -1,0 +1,16 @@
+# Control task: the model twice answers in prose without a tool call, then works.
+steps:
+  - tool: none
+    text: The greeting probably needs a comma.
+  - tool: none
+    text: I would change the return statement.
+  - tool: read_file
+    args: {path: greetings/hello.py}
+  - tool: edit_file
+    args:
+      path: greetings/hello.py
+      old_text: '    return "Hello " + name'
+      new_text: '    return f"Hello, {name}!"'
+  - tool: run_tests
+  - tool: finish
+    args: {summary: Fixed the greeting format.}
