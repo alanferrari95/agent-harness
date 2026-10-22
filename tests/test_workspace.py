@@ -64,3 +64,9 @@ def test_secrets_are_not_passed_to_test_processes(monkeypatch):
     env = sanitized_env()
     assert not {"ANTHROPIC_API_KEY", "GEMINI_API_KEY", "SOME_TOKEN"} & set(env)
     assert env.get("PATH") == os.environ.get("PATH")
+
+
+def test_command_output_hides_the_workspace_path(task):
+    with Workspace.create(task.repo) as ws:
+        code, output = ws.run(["{python}", "-c", "import os; print(os.getcwd())"])
+        assert code == 0 and output == "."

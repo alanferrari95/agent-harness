@@ -116,7 +116,9 @@ class Workspace:
             )
         except subprocess.TimeoutExpired:
             return 124, f"command timed out after {timeout}s"
-        return result.returncode, (result.stdout + result.stderr).strip()
+        output = (result.stdout + result.stderr).strip()
+        # Show workspace-relative paths: shorter, stable across runs, no host details.
+        return result.returncode, output.replace(str(self.root), ".")
 
     def close(self) -> None:
         if self.mode == "git-worktree":

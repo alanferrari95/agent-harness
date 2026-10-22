@@ -14,7 +14,8 @@ def records(n: int, size: int = 400) -> list[StepRecord]:
 
 
 def builder(enabled: bool, threshold: int = 200, keep: int = 2) -> ContextBuilder:
-    return ContextBuilder("Do the task.", "a.py\nb.py", "Be careful.", CompactionConfig(enabled, threshold, keep))
+    compaction = CompactionConfig(enabled, threshold, keep)
+    return ContextBuilder("Do the task.", "a.py\nb.py", "Be careful.", compaction)
 
 
 def test_stable_sections_come_first():
