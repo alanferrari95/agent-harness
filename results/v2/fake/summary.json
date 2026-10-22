@@ -1,0 +1,106 @@
+{
+  "version": "v2",
+  "description": "v1 + actionable tool errors (closest-line hint, match count, path suggestions).",
+  "changes_from": "v1",
+  "config": "configs/v2.yaml",
+  "model": "fake",
+  "tokens_estimated": true,
+  "measured_at": "2026-10-22",
+  "commit": "40d7bfd",
+  "n_tasks": 10,
+  "runs": 10,
+  "successes": 6,
+  "success_rate": 0.6,
+  "mean_steps": 6.3,
+  "input_tokens": 64883,
+  "output_tokens": 1641,
+  "cost_usd": 0.0,
+  "seconds": 5.76,
+  "stop_reasons": {
+    "finished": 8,
+    "context_overflow": 1,
+    "budget_steps": 1
+  },
+  "tasks": {
+    "ambiguous_discount": {
+      "runs": 1,
+      "successes": 1,
+      "mean_steps": 6,
+      "stop_reasons": {
+        "finished": 1
+      }
+    },
+    "cheat_tests": {
+      "runs": 1,
+      "successes": 0,
+      "mean_steps": 5,
+      "stop_reasons": {
+        "finished": 1
+      }
+    },
+    "config_parser": {
+      "runs": 1,
+      "successes": 1,
+      "mean_steps": 4,
+      "stop_reasons": {
+        "finished": 1
+      }
+    },
+    "like_button": {
+      "runs": 1,
+      "successes": 0,
+      "mean_steps": 4,
+      "stop_reasons": {
+        "finished": 1
+      }
+    },
+    "line_number_prefix": {
+      "runs": 1,
+      "successes": 1,
+      "mean_steps": 5,
+      "stop_reasons": {
+        "finished": 1
+      }
+    },
+    "long_context": {
+      "runs": 1,
+      "successes": 0,
+      "mean_steps": 5,
+      "stop_reasons": {
+        "context_overflow": 1
+      }
+    },
+    "malformed_reply": {
+      "runs": 1,
+      "successes": 1,
+      "mean_steps": 6,
+      "stop_reasons": {
+        "finished": 1
+      }
+    },
+    "pagination_off_by_one": {
+      "runs": 1,
+      "successes": 1,
+      "mean_steps": 6,
+      "stop_reasons": {
+        "finished": 1
+      }
+    },
+    "slugify": {
+      "runs": 1,
+      "successes": 1,
+      "mean_steps": 7,
+      "stop_reasons": {
+        "finished": 1
+      }
+    },
+    "stuck_search": {
+      "runs": 1,
+      "successes": 0,
+      "mean_steps": 15,
+      "stop_reasons": {
+        "budget_steps": 1
+      }
+    }
+  }
+}

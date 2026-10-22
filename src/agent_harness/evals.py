@@ -132,7 +132,7 @@ def load_summaries(results_dir: Path) -> list[dict[str, Any]]:
 def comparison_table(summaries: list[dict[str, Any]]) -> str:
     lines = [
         "| Version | Change (one per version) | Model | Success | Mean steps "
-        "| Tokens in / out | Cost (USD) | Time (s) |",
+        "| Tokens in / out | Cost (USD) | Total time (s) |",
         "|---|---|---|---|---|---|---|---|",
     ]
     for s in summaries:
