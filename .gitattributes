@@ -1,0 +1,2 @@
+# Exact-text edits depend on byte-stable fixtures: keep LF everywhere.
+* text=auto eol=lf
