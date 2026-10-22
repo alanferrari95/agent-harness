@@ -1,0 +1,55 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: lint and unit tests (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check src scripts tests
+      - run: pytest -q
+
+  eval-gate:
+    # Promotion gate, as in invoice-mlops: run the eval suite for the reference version
+    # with the fake model (no API key) and fail the PR if the success rate drops below
+    # the committed baseline.
+    name: eval gate (fake model)
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install -e .
+      - name: Run the eval suite for the reference version
+        run: |
+          REF=$(python -c "import json; print(json.load(open('evals/baseline.json'))['config'])")
+          agent-harness eval --config "$REF" --model fake --out out/results --traces out/traces
+      - name: Gate against the baseline
+        run: |
+          VERSION=$(python -c "import json; print(json.load(open('evals/baseline.json'))['version'])")
+          agent-harness gate --current "out/results/$VERSION/fake/summary.json" --baseline evals/baseline.json
+      - name: Summarize traces
+        if: always()
+        run: python scripts/summarize_traces.py out/traces | tail -n 20
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: eval-traces
+          path: out/
