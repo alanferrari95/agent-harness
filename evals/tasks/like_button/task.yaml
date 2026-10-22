@@ -1,0 +1,5 @@
+id: like_button
+goal: >-
+  Add a like button to every rendered post. The button must have the CSS class
+  "like-button" and show the post's like count.
+tags: [feature, tutorial]

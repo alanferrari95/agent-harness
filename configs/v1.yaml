@@ -1,0 +1,35 @@
+version: v1
+description: >-
+  Baseline: linear loop with step, cost and time budgets; isolated workspace; external
+  verification; plain tool errors; full history in every prompt.
+changes_from: null
+
+loop:
+  max_steps: 15
+  max_cost_usd: 0.50
+  max_seconds: 300
+  max_malformed: 3
+  stuck_threshold: 0       # off
+  verify_on_stop: false
+
+tools:
+  actionable_errors: false # every failure is a bare "ERROR: <tool> failed."
+
+context:
+  compaction:
+    enabled: false         # the whole history is sent verbatim
+
+workspace:
+  mode: copy               # temp copy; the fixture is never modified
+
+model:
+  id: fake
+  context_window_tokens: 6000
+
+# What is not declared does not exist: tools without an allow/ask rule are never shown.
+permissions:
+  rules:
+    - {tool: search_code, decision: allow}
+    - {tool: read_file, decision: allow}
+    - {tool: edit_file, decision: ask}   # human in the loop; evals auto-approve and trace it
+    - {tool: run_tests, decision: allow}

@@ -1,0 +1,37 @@
+version: v6
+description: >-
+  v5 + threshold context compaction (structured summary, recent tail kept verbatim).
+changes_from: v5
+
+loop:
+  max_steps: 15
+  max_cost_usd: 0.50
+  max_seconds: 300
+  max_malformed: 3
+  stuck_threshold: 3
+  verify_on_stop: true
+
+tools:
+  actionable_errors: true  # errors say what to do next
+
+context:
+  compaction:
+    enabled: true
+    threshold_tokens: 1500 # fold old steps past ~1500 tokens of history
+    keep_recent: 3
+
+workspace:
+  mode: copy               # temp copy; the fixture is never modified
+
+model:
+  id: fake
+  context_window_tokens: 6000
+
+# What is not declared does not exist: tools without an allow/ask rule are never shown.
+permissions:
+  rules:
+    - {tool: search_code, decision: allow}
+    - {tool: read_file, decision: allow}
+    - {tool: edit_file, paths: ["tests/*"], decision: deny, reason: acceptance tests are read-only}
+    - {tool: edit_file, decision: ask}   # human in the loop; evals auto-approve and trace it
+    - {tool: run_tests, decision: allow}

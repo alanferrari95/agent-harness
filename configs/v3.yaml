@@ -1,0 +1,34 @@
+version: v3
+description: >-
+  v2 + verify-on-stop: finish is rejected while edits are untested.
+changes_from: v2
+
+loop:
+  max_steps: 15
+  max_cost_usd: 0.50
+  max_seconds: 300
+  max_malformed: 3
+  stuck_threshold: 0       # off
+  verify_on_stop: true
+
+tools:
+  actionable_errors: true  # errors say what to do next
+
+context:
+  compaction:
+    enabled: false         # the whole history is sent verbatim
+
+workspace:
+  mode: copy               # temp copy; the fixture is never modified
+
+model:
+  id: fake
+  context_window_tokens: 6000
+
+# What is not declared does not exist: tools without an allow/ask rule are never shown.
+permissions:
+  rules:
+    - {tool: search_code, decision: allow}
+    - {tool: read_file, decision: allow}
+    - {tool: edit_file, decision: ask}   # human in the loop; evals auto-approve and trace it
+    - {tool: run_tests, decision: allow}

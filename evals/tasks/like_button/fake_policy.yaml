@@ -1,0 +1,22 @@
+# The tutorial's case: the first edit forgets the counter and the model claims success
+# without running the tests. Only verify-on-stop makes it look at the evidence.
+steps:
+  - tool: search_code
+    args: {query: render_post}
+  - tool: read_file
+    args: {path: blog/post.py}
+  - tool: edit_file
+    args:
+      path: blog/post.py
+      old_text: "</h2></article>"
+      new_text: "</h2><button class=\"like-button\">Like</button></article>"
+  - tool: finish
+    args: {summary: Added the like button.}
+  - tool: edit_file
+    args:
+      path: blog/post.py
+      old_text: "<button class=\"like-button\">Like</button>"
+      new_text: "<button class=\"like-button\">Like {post[\"likes\"]}</button>"
+  - tool: run_tests
+  - tool: finish
+    args: {summary: Like button with the like count; tests pass.}
