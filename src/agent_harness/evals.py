@@ -24,7 +24,8 @@ from .tasks import Task
 
 
 def model_slug(model_id: str) -> str:
-    return model_id.replace("/", "_")
+    # Directory-safe on every OS: "ollama/qwen3:8b" -> "ollama_qwen3-8b"
+    return model_id.replace("/", "_").replace(":", "-")
 
 
 def _git_commit() -> str | None:

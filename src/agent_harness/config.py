@@ -40,6 +40,8 @@ class ModelConfig:
     effort: str | None = None  # Anthropic output_config.effort; None = model default
     max_output_tokens: int = 4096
     context_window_tokens: int = 6000  # fake model only: real providers report their own
+    num_ctx: int = 16384  # Ollama only: context length sent with every request
+    think: bool | None = None  # Ollama only: None = the model's default
 
 
 @dataclass

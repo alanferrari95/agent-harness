@@ -1,4 +1,4 @@
-"""Build the model for a run from its ID: fake, claude-* or gemini-*."""
+"""Build the model for a run from its ID: fake, claude-*, gemini-* or ollama/<name>."""
 
 from __future__ import annotations
 
@@ -20,4 +20,8 @@ def make_model(model_id: str, task: Task, config: ModelConfig) -> Model:
         from .gemini_model import GeminiModel
 
         return GeminiModel(model_id, config.max_output_tokens)
-    raise ModelError(f"unknown model '{model_id}': use fake, claude-* or gemini-*")
+    if model_id.startswith("ollama/"):
+        from .ollama_model import OllamaModel
+
+        return OllamaModel(model_id, config.num_ctx, config.max_output_tokens, config.think)
+    raise ModelError(f"unknown model '{model_id}': use fake, claude-*, gemini-* or ollama/<name>")
