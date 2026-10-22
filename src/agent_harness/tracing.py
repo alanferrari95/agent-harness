@@ -1,8 +1,9 @@
 """JSONL traces: one JSON object per line, one file per run.
 
-Event types: run_start, step, permission, compaction, run_end. Every line carries the
-run id and a timestamp, so traces from many runs can be concatenated and analyzed like
-any table (pandas.read_json(path, lines=True)).
+Event types: run_start, step, permission, compaction, run_end. Each step records the
+full prompt the model saw, the call it made, the observation and the usage. Every line
+carries the run id and a timestamp, so traces from many runs can be concatenated and
+analyzed like any table (pandas.read_json(path, lines=True)).
 """
 
 from __future__ import annotations
@@ -35,7 +36,8 @@ class Tracer:
 
     def emit(self, event: str, **fields: Any) -> None:
         record = {"ts": round(time.time(), 3), "run_id": self.run_id, "event": event}
-        record.update(_clip(fields))
+        # The prompt is kept whole: a trace must show exactly what the model saw.
+        record.update({k: v if k == "prompt" else _clip(v) for k, v in fields.items()})
         self.events.append(record)
         if self.path:
             with self.path.open("a", encoding="utf-8") as handle:

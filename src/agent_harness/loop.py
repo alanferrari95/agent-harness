@@ -143,6 +143,7 @@ class Harness:
                 totals["cost_usd"] += response.cost_usd
                 estimated = estimated or response.tokens_estimated
                 usage = {
+                    "prompt": prompt,
                     "prompt_chars": len(prompt),
                     "input_tokens": response.input_tokens,
                     "output_tokens": response.output_tokens,

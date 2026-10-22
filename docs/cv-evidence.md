@@ -9,7 +9,7 @@ context compaction and an isolated workspace.*
 
 | Claim | Files | Evidence |
 |---|---|---|
-| Seven subsystems | README table "Subsystems → files" | Five implemented; orchestration absent by design (single agent, Rec. 12); extensibility in its minimal form (structural `Model` protocol, YAML configs, rules as data) |
+| Seven subsystems | README table "Subsystems → files" | All seven in the minimal form of the paper's Table 1: loop, LLM integration, tools, memory and context, safety; orchestration's minimal form is none (single agent, Rec. 12, as in Aider and Mini-SWE-Agent); extensibility's is structural typing (`Model` protocol), plus YAML configs and rules as data |
 | Typed tools | [`tools.py`](../src/agent_harness/tools.py) | JSON Schema per tool, validated before execution: `test_schema_validation_messages`, `test_every_tool_schema_is_strict` |
 | Actionable errors | [`tools.py`](../src/agent_harness/tools.py) | `test_edit_not_found_quotes_closest_line`, `test_edit_ambiguous_reports_count_and_lines`, `test_edit_rejects_line_number_prefixes`, `test_missing_file_suggests_paths`; eval v1 → v2 fixes 3 tasks (30% → 60%) |
 | Loop with step/cost budgets | [`loop.py`](../src/agent_harness/loop.py) | `test_step_budget`, `test_cost_budget`, `test_time_budget`, `test_malformed_replies_are_capped` |
@@ -26,7 +26,7 @@ change at a time.*
 |---|---|---|
 | External verification | [`verification.py`](../src/agent_harness/verification.py), [`loop.py`](../src/agent_harness/loop.py) | `test_finish_is_a_claim_not_evidence`, `test_tampered_tests_do_not_fool_verification`, `test_verify_on_stop_rejects_untested_edits`; eval v2 → v3 fixes `like_button` |
 | Permission rules | [`permissions.py`](../src/agent_harness/permissions.py), [`configs/`](../configs/) | `test_first_matching_rule_wins`, `test_undeclared_tools_do_not_exist`, `test_deny_rule_blocks_edits_to_tests`, `test_ask_rule_consults_the_approver`; eval v3 → v4 fixes `cheat_tests` |
-| JSONL traces | [`tracing.py`](../src/agent_harness/tracing.py), [`scripts/summarize_traces.py`](../scripts/summarize_traces.py) | [`examples/trace_like_button_v1.jsonl`](examples/trace_like_button_v1.jsonl) (finish accepted, tests fail) vs [`examples/trace_like_button_v6.jsonl`](examples/trace_like_button_v6.jsonl) (finish rejected, tests run, fixed); `test_happy_path_is_verified_by_the_harness` |
+| JSONL traces | [`tracing.py`](../src/agent_harness/tracing.py), [`scripts/summarize_traces.py`](../scripts/summarize_traces.py) | [`examples/trace_like_button_v1.jsonl`](examples/trace_like_button_v1.jsonl) (finish accepted, tests fail) vs [`examples/trace_like_button_v6.jsonl`](examples/trace_like_button_v6.jsonl) (finish rejected, tests run, fixed); every step stores the exact prompt: `test_trace_records_the_exact_prompt` |
 | Eval suite | [`evals/tasks/`](../evals/tasks/), [`evals.py`](../src/agent_harness/evals.py) | 10 tasks with failing tests (`test_every_task_fixture_starts_red`); [`results.md`](results.md) generated from `results/*/*/summary.json` |
 | One change at a time | [`configs/v1.yaml`](../configs/v1.yaml) … [`v6.yaml`](../configs/v6.yaml) | `test_each_version_changes_one_thing` fails if a version changes more than one knob |
 | Regression gate in CI | [`ci.yml`](../.github/workflows/ci.yml), [`evals/baseline.json`](../evals/baseline.json) | `test_gate_*` (same contract as invoice-mlops's `assert_min_f1`); the `eval gate (fake model)` job |

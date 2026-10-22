@@ -14,9 +14,18 @@ def test_happy_path_is_verified_by_the_harness(task, tmp_path):
     trace = tmp_path / "trace.jsonl"
     result = Harness(make_config(), ScriptedModel([FIX_ADD, RUN_TESTS, FINISH])).run(task, trace)
     assert result.success and result.stop_reason == "finished" and result.steps == 3
-    events = [e["event"] for e in read_trace(trace)]
-    assert events[0] == "run_start" and events[-1] == "run_end"
-    assert events.count("step") == 3
+    events = read_trace(trace)
+    names = [e["event"] for e in events]
+    assert names[0] == "run_start" and names[-1] == "run_end"
+    assert names.count("step") == 3
+
+
+def test_trace_records_the_exact_prompt(task, tmp_path):
+    trace = tmp_path / "trace.jsonl"
+    model = ScriptedModel([FIX_ADD, RUN_TESTS, FINISH])
+    Harness(make_config(), model).run(task, trace)
+    steps = [e for e in read_trace(trace) if e["event"] == "step"]
+    assert [s["prompt"] for s in steps] == [r.prompt for r in model.requests]
 
 
 def test_finish_is_a_claim_not_evidence(task):

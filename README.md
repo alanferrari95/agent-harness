@@ -89,9 +89,11 @@ harness verifies the workspace and returns a result.
 
 ## Subsystems → files
 
-The paper's map has seven subsystems. Five are implemented in a minimal but complete
-form; orchestration is absent on purpose and extensibility is the lightest form found in
-the corpus. Verification, observability and evals sit across them.
+The paper's map (its Table 1) has seven subsystems, each with a minimal and a maximal form
+observed in the corpus. All seven are here in their minimal form, the way the paper
+credits Mini-SWE-Agent with all seven: for orchestration the minimal form is none (as in
+Aider and Mini-SWE-Agent; Rec. 12), for extensibility it is structural typing.
+Verification, observability and evals sit across them.
 
 | Subsystem | What it does here | Files |
 |---|---|---|
