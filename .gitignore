@@ -1,0 +1,22 @@
+# Third-party study material: never tracked
+*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Harness output: traces and workspaces of local runs
+runs/
+.workspaces/
+
+# Secrets
+.env
+.env.*
+*.key
