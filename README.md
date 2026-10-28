@@ -268,6 +268,10 @@ IDs and prices verified on 2026-10-22 against the providers' documentation
 | Google | `gemini-3.8-flash`, `gemini-3.5-flash-lite`, `gemini-4-argon` | 0.75 / 3.75, 0.30 / 2.50, 2 / 10 |
 | Ollama (local) | `ollama/<name>`, any pulled model with tool calling, e.g. `ollama/qwen3:8b` | free; runs on your hardware |
 
+Gemini prices are the Gemini Developer API rates (`generativelanguage.googleapis.com`, the
+endpoint this harness calls). Vertex AI bills differently: the `eu` multi-region charges
+0.825 / 4.125 for `gemini-3.8-flash` until 2026-12-31, the rate invoice-mlops uses.
+
 Any other Claude or Gemini ID works too once its price is added to `pricing.py` (the cost
 budget needs it).
 
